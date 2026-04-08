@@ -78,8 +78,8 @@ professor-matemática/
 
 | Teste | Com Skill | Sem Skill | Resultado |
 |-------|:---:|:---:|---|
-| **Eval-1:** 7º ano Rousseau | 100% ✅ | 80% ⚠️ | Skill +20% |
-| **Eval-2:** 2º EM Estado SP | 100% ✅ | 60% ❌ | Skill +40% (gerou TXT!) |
+| **Eval-1:** 7º ano  | 100% ✅ | 80% ⚠️ | Skill +20% |
+| **Eval-2:** 2º EM  | 100% ✅ | 60% ❌ | Skill +40% (gerou TXT!) |
 | **Eval-3:** 9º ano Geometria | 100% ✅ | 60% ⚠️ | Skill +40% |
 
 **Conclusão:** AvaliadorMat **APROVADO PARA PRODUÇÃO** ✅
