@@ -97,6 +97,12 @@ model Activity {
 
   estimatedDuration Int  // in minutes
 
+  // Visual assets (Canva, images, styling)
+  visualAssets Json?   // { canvaUrl, canvaDesignId, coverImage, colors, theme }
+
+  // Teacher-friendly printable version
+  printableUrl String? // Link to printable Canva template
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
