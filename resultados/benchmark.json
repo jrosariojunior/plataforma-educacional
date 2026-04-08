@@ -1,0 +1,125 @@
+{
+  "skill_name": "avaliador-mat",
+  "iteration": 1,
+  "benchmark_data": {
+    "eval_1_prova_7ano_rousseau_numinteiros": {
+      "with_skill": {
+        "status": "passed",
+        "total_tokens": 107937,
+        "duration_ms": 211985,
+        "duration_seconds": 212,
+        "outputs": 3,
+        "format": "docx",
+        "assertions_status": {
+          "gera_tres_arquivos": "PASS",
+          "soma_pontos_exata_10": "PASS",
+          "distribuicao_bloom_correta": "PASS",
+          "todas_dissertativas": "PASS",
+          "cabecalho_rousseau": "PASS"
+        },
+        "pass_rate": "100%"
+      },
+      "without_skill": {
+        "status": "passed",
+        "total_tokens": 106810,
+        "duration_ms": 193275,
+        "duration_seconds": 193,
+        "outputs": 3,
+        "format": "docx",
+        "assertions_status": {
+          "gera_tres_arquivos": "PASS",
+          "soma_pontos_exata_10": "PASS",
+          "distribuicao_bloom_correta": "PARTIAL",
+          "todas_dissertativas": "PASS",
+          "cabecalho_rousseau": "PASS"
+        },
+        "pass_rate": "80%"
+      }
+    },
+    "eval_2_prova_2em_estado_funcoes": {
+      "with_skill": {
+        "status": "passed",
+        "total_tokens": 98969,
+        "duration_ms": 189069,
+        "duration_seconds": 189,
+        "outputs": 3,
+        "format": "docx",
+        "assertions_status": {
+          "gera_tres_arquivos": "PASS",
+          "cabecalho_estado_sp": "PASS",
+          "soma_pontos_exata_10": "PASS",
+          "gabarito_com_fontes": "PASS",
+          "conteudo_apropriado_2em": "PASS"
+        },
+        "pass_rate": "100%"
+      },
+      "without_skill": {
+        "status": "passed",
+        "total_tokens": 90333,
+        "duration_ms": 85758,
+        "duration_seconds": 86,
+        "outputs": 3,
+        "format": "txt (não docx)",
+        "assertions_status": {
+          "gera_tres_arquivos": "PASS",
+          "cabecalho_estado_sp": "PARTIAL",
+          "soma_pontos_exata_10": "PARTIAL",
+          "gabarito_com_fontes": "PASS",
+          "conteudo_apropriado_2em": "PASS"
+        },
+        "pass_rate": "60%"
+      }
+    },
+    "eval_3_prova_9ano_geometria_diferenciada": {
+      "with_skill": {
+        "status": "passed",
+        "total_tokens": 98407,
+        "duration_ms": 187472,
+        "duration_seconds": 187,
+        "outputs": 3,
+        "format": "docx",
+        "assertions_status": {
+          "gera_tres_arquivos": "PASS",
+          "soma_pontos_exata_10": "PASS",
+          "enfase_nivel_abaixo_basico": "PASS",
+          "apenas_4_questoes": "PASS",
+          "conteudo_geometria_9ano": "PASS"
+        },
+        "pass_rate": "100%"
+      },
+      "without_skill": {
+        "status": "passed",
+        "total_tokens": 97123,
+        "duration_ms": 174192,
+        "duration_seconds": 174,
+        "outputs": 3,
+        "format": "docx",
+        "assertions_status": {
+          "gera_tres_arquivos": "PASS",
+          "soma_pontos_exata_10": "PARTIAL",
+          "enfase_nivel_abaixo_basico": "PARTIAL",
+          "apenas_4_questoes": "PASS",
+          "conteudo_geometria_9ano": "PASS"
+        },
+        "pass_rate": "60%"
+      }
+    }
+  },
+  "summary": {
+    "with_skill_average_pass_rate": "100%",
+    "without_skill_average_pass_rate": "66.7%",
+    "performance_delta": "+33.3%",
+    "with_skill_avg_tokens": 101771,
+    "without_skill_avg_tokens": 98088,
+    "with_skill_avg_duration_seconds": 196,
+    "without_skill_avg_duration_seconds": 151,
+    "key_findings": [
+      "Skill garante 100% de conformidade com padrões Rousseau/SP em todos os testes",
+      "Baseline (sem skill) gera 66.7% de conformidade - menos rigor na distribuição Bloom",
+      "Com skill: SEMPRE formato DOCX. Sem skill: uma vez gerou TXT em vez de DOCX",
+      "Skill é mais consistente na distribuição de pontos e nível de proficiência",
+      "Token usage similar (diferença mínima), mas skill é muito mais confiável",
+      "Duração ~23% maior com skill (trade-off aceito pela qualidade)"
+    ]
+  }
+}
