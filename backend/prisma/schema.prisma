@@ -1,0 +1,208 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== USER MODELS ====================
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role
+  grade     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  student   Student?
+  teacher   Teacher?
+
+  @@map("users")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model Student {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Profile with immutable history
+  profile   Json     @default("{\"sessionsCompleted\": 0, \"totalTimeSpent\": 0, \"misconceptions\": [], \"consolidated\": []}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  sessions  Session[]
+  submissions Submission[]
+
+  @@map("students")
+}
+
+model Teacher {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  classes   Class[]
+
+  @@map("teachers")
+}
+
+model Class {
+  id        String   @id @default(cuid())
+  teacherId String
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  name      String
+  grade     Int
+  semester  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("classes")
+}
+
+// ==================== ACTIVITY MODELS ====================
+
+model Activity {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  topic       String   // e.g., "divisao-decimal", "fracao"
+  grade       Int      // Target grade level
+  difficulty  String   // "beginner", "intermediate", "advanced"
+
+  // Activity schema (questions, options, correct answers)
+  schema      Json     // Array of questions with structure
+
+  estimatedDuration Int  // in minutes
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  sessions    Session[]
+
+  @@index([topic])
+  @@index([grade])
+  @@map("activities")
+}
+
+// ==================== SESSION MODELS ====================
+
+model Session {
+  id          String   @id @default(cuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  activityId  String
+  activity    Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  status      SessionStatus @default(IN_PROGRESS)
+
+  // Immutable history of submissions
+  submissions Submission[]
+
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([activityId])
+  @@map("sessions")
+}
+
+enum SessionStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+model Submission {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  questionId  String
+  answer      String
+  isCorrect   Boolean
+
+  misconceptionId String?
+  misconception   Misconception? @relation(fields: [misconceptionId], references: [id])
+
+  responseTime Int?    // in milliseconds
+
+  createdAt   DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([studentId])
+  @@index([misconceptionId])
+  @@map("submissions")
+}
+
+// ==================== MISCONCEPTION MODELS ====================
+
+model Misconception {
+  id          String   @id @default(cuid())
+  code        String   @unique // e.g., "ALIGN_DECIMALS"
+  title       String
+  description String?
+
+  // Support level: 1 = tooltip hint, 2 = scaffolding, 3 = full tutorial
+  level       Int      @default(1)
+
+  // JSON structure with hints and explanations at each level
+  scaffolding Json     // { "level1": "hint text", "level2": "explanation", "level3": "tutorial" }
+
+  // Example problems that trigger this misconception
+  examples    Json?    // Array of example questions/answers
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  submissions Submission[]
+
+  @@map("misconceptions")
+}
+
+// ==================== AUDIT MODELS ====================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // e.g., "reset_student_profile", "create_activity"
+  entityType String
+  entityId  String
+  details   Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType])
+  @@index([entityId])
+  @@map("audit_logs")
+}
